@@ -21,17 +21,16 @@ const { NotImplementedError } = require("../extensions/index.js");
  */
 
 class VigenereCipheringMachine {
+  constructor(direction = true) {
+    this.direction = direction;
+  }
+
   alfabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   n = this.alfabet.length;
-  encrypt(str, key) {
-    // const strArr = str.toUpperCase().split(" ");
-    // console.log(strArr);
-    // const fullKey =
-    //   key.length < word.length
-    //     ? fillKey(key, word.length)
-    //     : key.toUpperCase().split("");
-    // console.log(fullKey);
+  encrypt(str, key, isEncrypt = true) {
+    if (!str || !key) throw new Error("Incorrect arguments!");
     let index = 0;
+    const k = isEncrypt ? 1 : -1;
     const arrKey = key.toUpperCase().split("");
     const res = str
       .toUpperCase()
@@ -39,17 +38,16 @@ class VigenereCipheringMachine {
       .map((ch, i, ar) => {
         if (this.alfabet.includes(ch)) {
           const offset = this.alfabet.indexOf(arrKey[index++ % key.length]);
-          return this.alfabet[(offset + this.alfabet.indexOf(ch)) % this.n];
+          return this.alfabet[
+            (this.alfabet.indexOf(ch) + this.n + k * offset) % this.n
+          ];
         }
         return ch;
-      })
-      .join("");
-
-    console.log(res);
+      });
+    return this.direction ? res.join("") : res.reverse().join("");
   }
-  decrypt() {
-    throw new NotImplementedError("Not implemented");
-    // remove line with error and write your code here
+  decrypt(str, key) {
+    return this.encrypt(str, key, false);
   }
 }
 
