@@ -13,23 +13,9 @@ const { NotImplementedError } = require("../extensions/index.js");
  */
 const seasons = ["winter", "spring", "summer", "autumn"];
 function getSeason(date) {
-  if (date === undefined) return "Unable to determine the time of year!";
-  const originalDate = new Date();
-  if (!(date instanceof Date) || isNaN(date)) throw new Error("Invalid date!");
-
-  for (const key in originalDate) {
-    if (!date.hasOwnProperty(key)) throw new Error("Invalid date!");
-  }
-  // const originalDateArr = Object.keys(Object.getOwnPropertyNames(originalDate));
-  // const arrDate = Object.keys(Object.getOwnPropertyNames(date));
-
-  // for (let i = 0; i < originalDate.length; i++) {
-  //   if (originalDateArr[i] !== arrDate[i]) throw new Error("Invalid date!");
-  // }
-  if (Object.getOwnPropertyNames(date).length) {
-    throw Error("Invalid date!");
-  }
-
+  if (!date) return "Unable to determine the time of year!";
+  if (!(date instanceof Date) || date.hasOwnProperty("toString"))
+    throw new Error("Invalid date!");
   try {
     return seasons[Math.floor((date.getMonth() + 1) / 3) % 4];
   } catch (error) {
